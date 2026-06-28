@@ -11,8 +11,8 @@ UPLOAD_FOLDER = pathlib.Path("temp_flask_uploads")
 UPLOAD_FOLDER.mkdir(exist_ok=True)
 
 try:
-    with open("api_file", 'r') as api:
-        google_api = api.read().strip()
+    try:
+    google_api = "ADD_YOUR_GEMINI_API_KEY_HERE"
     client = genai.Client(api_key=google_api)
 
     friday_config = types.GenerateContentConfig(
