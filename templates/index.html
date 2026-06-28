@@ -1,0 +1,447 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FRIDAY</title>
+
+    <!-- Premium Fonts & CSS Markdown/Code Highlighter Themes -->
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Share+Tech+Mono&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css">
+
+    <style>
+        /* 1. GLOBAL LAYOUT & DEEP BLACK THEME */
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            background-color: #000000; /* Absolute Black Theme */
+            color: #e2e8f0;
+            font-family: 'Inter', sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        h1 {
+            font-family: 'Orbitron', sans-serif;
+            color: #00f0ff;
+            text-shadow: 0 0 15px rgba(0, 240, 255, 0.4);
+            letter-spacing: 4px;
+            font-size: 28px;
+            margin-bottom: 4px;
+        }
+
+        .subtitle {
+            font-family: 'Share Tech Mono', monospace;
+            color: rgba(0, 240, 255, 0.6);
+            font-size: 11px;
+            letter-spacing: 3px;
+            margin-bottom: 25px;
+            text-transform: uppercase;
+        }
+
+        /* 2. PREMIUM CHAT CONTAINER */
+        #chat-container {
+            width: 1100px;
+            max-width: 95%;
+            height: 650px;
+            background: #000000;
+            border-radius: 12px;
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.9), 0 0 30px rgba(0, 240, 255, 0.03);
+            display: flex;
+            flex-direction: column;
+            padding: 20px;
+        }
+
+        #chat-log {
+            flex-grow: 1;
+            overflow-y: auto;
+            margin-bottom: 20px;
+            padding-right: 8px;
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+
+        /* Custom Scrollbar */
+        #chat-log::-webkit-scrollbar {
+            width: 5px;
+        }
+        #chat-log::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        #chat-log::-webkit-scrollbar-thumb {
+            background: rgba(0, 240, 255, 0.2);
+            border-radius: 4px;
+        }
+
+        /* 3. RESPONSIVE CHAT BUBBLE ALIGNMENT */
+        .message-row {
+            display: flex;
+            width: 100%;
+        }
+
+        /* Boss Chat Align Right */
+        .user-row {
+            justify-content: flex-end;
+        }
+
+        /* Friday Chat Align Left */
+        .friday-row {
+            justify-content: flex-start;
+        }
+
+        .bubble {
+            max-width: 80%;
+            padding: 14px 18px;
+            border-radius: 12px;
+            font-size: 14px;
+            line-height: 1.6;
+        }
+
+        .user-bubble {
+            background: #111115;
+            color: #ffffff;
+            border-bottom-right-radius: 2px;
+            box-shadow: 0 4px 12px rgba(255, 0, 127, 0.05);
+        }
+
+        .friday-bubble {
+            background: #000000;
+            color: #e2e8f0;
+            border-bottom-left-radius: 2px;
+            box-shadow: 0 4px 12px rgba(0, 240, 255, 0.03)
+        }
+
+        .sender-tag {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 11px;
+            font-weight: bold;
+            margin-bottom: 6px;
+            letter-spacing: 1px;
+            display: block;
+        }
+
+        .user-row .sender-tag { color: #ff007f; text-align: right; }
+        .friday-row .sender-tag { color: #00f0ff; }
+
+        /* 4. PROFESSIONAL MARKDOWN STYLING */
+        .friday-bubble p {
+            margin-bottom: 12px;
+        }
+        .friday-bubble p:last-child {
+            margin-bottom: 0;
+        }
+        .friday-bubble ul, .friday-bubble ol {
+            margin-left: 20px;
+            margin-bottom: 12px;
+        }
+        .friday-bubble li {
+            margin-bottom: 4px;
+        }
+        .friday-bubble h3 {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 13px;
+            color: #00f0ff;
+            margin: 18px 0 8px 0;
+        }
+        .friday-bubble hr {
+            border: 0;
+            height: 1px;
+            background: rgba(0, 240, 255, 0.15);
+            margin: 16px 0;
+        }
+
+        /* Code Block Containers */
+        pre[class*="language-"] {
+            background: #131313 !important;
+            border: 1px solid rgba(255, 255, 255, 0.05) !important;
+            border-radius: 6px !important;
+            margin: 12px 0 !important;
+            padding: 12px !important;
+        }
+        code[class*="language-"] {
+            font-family: 'Share Tech Mono', monospace !important;
+            font-size: 13px !important;
+        }
+        :not(pre) > code {
+            background: rgba(0, 240, 255, 0.1);
+            color: #00f0ff;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-family: 'Share Tech Mono', monospace;
+            font-size: 13px;
+        }
+
+        /* 5. HIGH-TECH LOADING ANIMATION STYLES */
+        .loading-container {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            min-width: 240px;
+            padding: 4px 0;
+        }
+
+        .loading-status-wrapper {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        /* Spinning Tech Radar Element */
+        .radar-spinner {
+            width: 18px;
+            height: 18px;
+            border: 2px solid rgba(0, 240, 255, 0.15);
+            border-top-color: #00f0ff;
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+        }
+
+        .loading-text {
+            font-family: 'Share Tech Mono', monospace;
+            color: #00f0ff;
+            font-size: 13px;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+        }
+
+        /* Audio Wave / Pulse Processing Bar */
+        .pulse-bar-container {
+            width: 100%;
+            height: 3px;
+            background: rgba(0, 240, 255, 0.05);
+            border-radius: 2px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .pulse-bar-progress {
+            width: 40%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, #00f0ff, transparent);
+            position: absolute;
+            animation: loadingBar Shift 1.5s infinite ease-in-out;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        @keyframes loadingBarShift {
+            0% { left: -40%; }
+            100% { left: 110%; }
+        }
+
+        /* 6. INTERACTIVE FOOTER INTERFACE */
+        .control-grid {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            border-top: 1px solid rgba(255, 255, 255, 0.05);
+            padding-top: 15px;
+        }
+
+        .file-wrapper {
+            width: fit-content;
+            font-family: 'Share Tech Mono', monospace;
+            font-size: 12px;
+            color: rgba(0, 240, 255, 0.6);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        input[type="file"] {
+            color: #94a3b8;
+            font-size: 11px;
+        }
+
+        .input-area {
+            display: flex;
+            gap: 10px;
+        }
+
+        input[type="text"] {
+            flex-grow: 1;
+            background: #050507;
+            border: 1px solid rgba(0, 240, 255, 0.2);
+            border-radius: 6px;
+            padding: 12px 16px;
+            color: #ffffff;
+            font-size: 14px;
+            outline: none;
+            transition: all 0.2s ease;
+        }
+
+        input[type="text"]:focus {
+            border-color: #00f0ff;
+            box-shadow: 0 0 10px rgba(0, 240, 255, 0.15);
+        }
+
+        button {
+            background: #008c95;
+            color: #000000;
+            font-family: 'Orbitron', sans-serif;
+            font-size: 12px;
+            font-weight: bold;
+            border: none;
+            border-radius: 6px;
+            padding: 0 24px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            letter-spacing: 1px;
+        }
+
+        button:hover {
+            background: #00f0ff;
+            box-shadow: 0 0 15px #00f0ff;
+        }
+
+        .file-info {
+            font-size: 11px;
+            color: #ff007f;
+            margin-top: 4px;
+            display: block;
+        }
+    </style>
+</head>
+<body>
+
+<!--    <img src="https://i.pinimg.com/originals/9d/f5/22/9df522a31e95f6b502f12cf3b5fe227e.gif" alt="F.R.I.D.A.Y" style="mix-blend-mode:Darker; height: 75px; width: 113px; border-radius: 50%;">-->
+    <div class="subtitle">Mainframe Operating System // Secure Data Stream</div>
+
+    <div id="chat-container">
+        <div id="chat-log">
+            <!-- Initial System Notification -->
+            <div class="message-row friday-row">
+                <div class="bubble friday-bubble">
+                    <span class="sender-tag">FRIDAY</span>
+                    Mainframe initialized. Core parameters nominal. Drop code structures, metrics, or data sheets directly into the buffer, Sir.
+                </div>
+            </div>
+        </div>
+
+        <div class="control-grid">
+            <div class="file-wrapper">
+                <input type="file" id="file-input" accept=".png, .jpg, .jpeg, .webp, .pdf, .txt, .csv">
+            </div>
+
+            <div class="input-area">
+                <input type="text" id="user-input" placeholder="Awaiting operational directives..." onkeydown="if(event.key === 'Enter') sendMessage()">
+                <button onclick="sendMessage()">TRANSMIT</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Professional Parser & Code Syntax Libraries -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/marked/4.3.0/marked.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-python.min.js"></script>
+
+    <script>
+        async function sendMessage() {
+            const inputField = document.getElementById('user-input');
+            const fileField = document.getElementById('file-input');
+            const messageText = inputField.value.trim();
+            const targetFile = fileField.files[0];
+
+            if (!messageText && !targetFile) return;
+
+            const chatLog = document.getElementById('chat-log');
+
+            // 1. APPEND USER MESSAGE RIGHT ALIGNED
+            let userContentHtml = `<p>${messageText}</p>`;
+            if (targetFile) {
+                userContentHtml += `<span class="file-info">[Packet Attached: ${targetFile.name}]</span>`;
+            }
+
+            chatLog.innerHTML += `
+                <div class="message-row user-row">
+                    <div class="bubble user-bubble">
+                        ${userContentHtml}
+                    </div>
+                </div>
+            `;
+
+            inputField.value = '';
+            fileField.value = '';
+            chatLog.scrollTop = chatLog.scrollHeight;
+
+            // 2. PREPARE MULTIPART DATA PACKET
+            const formData = new FormData();
+            formData.append('message', messageText);
+            if (targetFile) {
+                formData.append('file', targetFile);
+            }
+
+            // 3. CREATE DYNAMIC SCI-FI LOADING STATE COMPONENT
+            const loadingId = 'loading-' + Date.now();
+            chatLog.innerHTML += `
+                <div class="message-row friday-row" id="${loadingId}">
+                    <div class="bubble friday-bubble">
+                        <span class="sender-tag">FRIDAY</span>
+                        <div class="loading-container">
+                            <div class="loading-status-wrapper">
+                                <div class="radar-spinner"></div>
+                                <div class="loading-text">Scanning data vectors... Analyzing context...</div>
+                            </div>
+                            <div class="pulse-bar-container">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+            chatLog.scrollTop = chatLog.scrollHeight;
+
+            try {
+                // 4. POST REQUEST TO FLASK BACKEND
+                const response = await fetch('/ask_friday', {
+                    method: 'POST',
+                    body: formData
+                });
+
+                const data = await response.json();
+                document.getElementById(loadingId).remove();
+
+                // 5. PARSE DYNAMIC MARKDOWN INTO BEAUTIFUL HTML CONTEXT
+                const parsedOutput = marked.parse(data.response);
+
+                // APPEND FRIDAY RESPONSE LEFT ALIGNED
+                chatLog.innerHTML += `
+                    <div class="message-row friday-row">
+                        <div class="bubble friday-bubble">
+                            <span class="sender-tag">FRIDAY</span>
+                            <div class="markdown-content">${parsedOutput}</div>
+                        </div>
+                    </div>
+                `;
+
+                // Re-trigger Prism syntax processing to color code variables beautifully
+                Prism.highlightAll();
+                chatLog.scrollTop = chatLog.scrollHeight;
+
+            } catch (error) {
+                document.getElementById(loadingId).remove();
+                chatLog.innerHTML += `
+                    <div class="message-row friday-row">
+                        <div class="bubble friday-bubble" style="border-color: #ff0055;">
+                            <span class="sender-tag" style="color: #ff0055;">SYSTEM ERROR</span>
+                            Matrix link broken. Mainframe connection timing out.
+                        </div>
+                    </div>
+                `;
+                chatLog.scrollTop = chatLog.scrollHeight;
+            }
+        }
+    </script>
+</body>
+</html>
